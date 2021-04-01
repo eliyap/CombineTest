@@ -8,13 +8,9 @@
 import SwiftUI
 import Combine
 
-final internal class TextObject: ObservableObject {
-    @Published var text: String = ""
-}
-
 struct ContentView: View {
     
-    @StateObject var textObject = TextObject()
+    @StateObject var textObject = MarkdownFile()
     @AppStorage("editMode") var editMode: EditMode = EditMode.typing
     
     var body: some View {
