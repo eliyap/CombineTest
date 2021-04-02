@@ -44,16 +44,15 @@ struct FileView: View {
             Text("typing").tag(EditMode.typing)
         })
         TextField("Text...", text: $document.text)
-        MarkdownView(editMode: editMode, textPub: nonTypingTextChange, text: $document.text)
+        MarkdownView(
+            editMode: editMode,
+            textPub: nonTypingTextChange,
+            text: $document.text
+        )
     }
     
     var nonTypingTextChange: AnyPublisher<String, Never> {
         document.$text
-            .filter { _ in editMode != .typing }
-            .map {
-//                print("did pass not typing filter")
-                return $0
-            }
             .eraseToAnyPublisher()
     }
 }

@@ -11,6 +11,7 @@ import UIKit
 final internal class PMTextView: UITextView {
     
     var textCancellable: AnyCancellable? = .none
+    var editMode: EditMode = .typing
     
     /// attach publisher to local commands
     func setup(text: AnyPublisher<String, Never>) -> Void {
@@ -20,7 +21,7 @@ final internal class PMTextView: UITextView {
     
     private func registerUndo(_ text: String) -> Void {
         
-        print("did register undo")
+        print("did register undo, editMode = \(editMode)")
         
         guard let um = undoManager else {
             return

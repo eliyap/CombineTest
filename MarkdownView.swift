@@ -37,7 +37,7 @@ struct MarkdownView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
         uiView.text = text
-        
+        uiView.editMode = editMode
     }
 }
 
