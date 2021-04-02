@@ -8,9 +8,9 @@
 import SwiftUI
 import Combine
 
-struct ContentView: View {
+struct WindowView: View {
     
-    @StateObject var textObject = MarkdownFile()
+    @ObservedObject var document: MarkdownFile
     @AppStorage("editMode") var editMode: EditMode = EditMode.typing
     
     var body: some View {
@@ -18,12 +18,37 @@ struct ContentView: View {
             Text("marking").tag(EditMode.marking)
             Text("typing").tag(EditMode.typing)
         })
-        TextField("Text...", text: $textObject.text)
-        MarkdownView(editMode: editMode, textPub: nonTypingTextChange, text: $textObject.text)
+        TextField("Text...", text: $document.text)
+        MarkdownView(editMode: editMode, textPub: nonTypingTextChange, text: $document.text)
     }
     
     var nonTypingTextChange: AnyPublisher<String, Never> {
-        textObject.$text
+        document.$text
+            .filter { _ in editMode != .typing }
+            .map {
+//                print("did pass not typing filter")
+                return $0
+            }
+            .eraseToAnyPublisher()
+    }
+}
+
+struct FileView: View {
+    
+    @Binding var document: MarkdownFile
+    @AppStorage("editMode") var editMode: EditMode = EditMode.typing
+    
+    var body: some View {
+        Picker(selection: $editMode, label: Text("Allow Publication"), content: {
+            Text("marking").tag(EditMode.marking)
+            Text("typing").tag(EditMode.typing)
+        })
+        TextField("Text...", text: $document.text)
+        MarkdownView(editMode: editMode, textPub: nonTypingTextChange, text: $document.text)
+    }
+    
+    var nonTypingTextChange: AnyPublisher<String, Never> {
+        document.$text
             .filter { _ in editMode != .typing }
             .map {
 //                print("did pass not typing filter")
